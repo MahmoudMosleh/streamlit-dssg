@@ -29,7 +29,6 @@ df['income_right'] = df['rendimento-anual'].replace('<7001', '-7001').replace('>
 df['income_mean'] = df[['income_sort', 'income_right']].mean(axis=1)
 df['percentagem-renda-paga'] = df['percentagem-renda-paga'].replace("NR", None).astype(float)
 
-"""
 # Load GeoJSON
 gj = gpd.read_file('distrito_all_s.geojson')
 
@@ -113,4 +112,4 @@ fig_map = px.choropleth(
 
 fig_map.update_geos(fitbounds="locations", visible=False, bgcolor="white")
 st.plotly_chart(fig_map, use_container_width=True)
-"""
+
