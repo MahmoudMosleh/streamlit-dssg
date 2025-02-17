@@ -7,6 +7,7 @@ import datetime
 import geojson
 import geopandas as gpd
 import streamlit as st
+import ast
 
 
 #load data
@@ -14,8 +15,8 @@ import streamlit as st
 df = pd.read_csv('data.csv')
 # Feature Engineering
 df['distrito'] = df['distrito'].str.normalize('NFKD').str.encode('ascii', errors='ignore').str.decode('utf-8').map(str.title)
-df['tipologia'] = df['tipologia'].apply(lambda x: ','.join(map(str, x)))
-df['situacao-habitacional'] = df['situacao-habitacional'].apply(lambda x: ','.join(map(str, x)))
+#df['tipologia'] = df['tipologia'].apply(lambda x: ','.join(map(str, x)))
+#df['situacao-habitacional'] = df['situacao-habitacional'].apply(lambda x: ','.join(map(str, x)))
 #df['area-util'] = df['area-util'].astype(str).str.replace("['", "", regex=True).str.replace("']", "", regex=True)
 df['area-util']=df['area-util']=df['area-util'].astype(str).str.replace("['","").str.replace("']","")
 df['area_left'] = df['area-util'].str.extract('(\\d+)', expand=False).astype('Int32')
@@ -50,14 +51,14 @@ selected_districts = st.sidebar.multiselect(
 # Typology filter
 selected_typologies = st.sidebar.multiselect(
     "Selecionar Tipologia",
-    options=df['tipologia'].unique(),
-    default=df['tipologia'].unique()
+    options=df['tipologia'].apply(ast.literal_eval).explode().unique(),
+    default=df['tipologia'].apply(ast.literal_eval).explode().unique()
 )
 
 # Housing Situation filter
 selected_habitation = st.sidebar.radio(
     "Situação Habitacional",
-    options=np.append(df['situacao-habitacional'].unique(), ['Todos']),
+    options=np.append(df['situacao-habitacional'].apply(ast.literal_eval).explode().unique(), ['Todos']),
     index=len(df['situacao-habitacional'].unique())
 )
 
