@@ -71,10 +71,10 @@ selected_year_range = st.sidebar.slider("Ano de Nascimento", min_value=min_year,
 selected_metric = st.sidebar.radio("Escolher Métrica", ["median", "mean"], index=0)
 
 # Data Filtering
-filtered_df = df[(df['distrito'].isin(selected_districts)) & (df['tipologia'].isin(selected_typologies))]
+filtered_df = df[(df['distrito'].isin(selected_districts)) & (df['tipologia'].apply(ast.literal_eval).explode().isin(selected_typologies))]
 
 if selected_habitation != "Todos":
-    filtered_df = filtered_df[filtered_df['situacao-habitacional'] == selected_habitation]
+    filtered_df = filtered_df[filtered_df['situacao-habitacional'].apply(ast.literal_eval).explode() == selected_habitation]
 
 filtered_df = filtered_df[(filtered_df['ano-nascimento'] >= selected_year_range[0]) & (filtered_df['ano-nascimento'] <= selected_year_range[1])]
 
